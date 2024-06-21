@@ -1,6 +1,7 @@
 package xyz.acproject.danmuji.entity.danmu_data;
 
 import lombok.Data;
+import xyz.acproject.danmuji.entity.base.BaseEntity;
 import xyz.acproject.danmuji.entity.superchat.MedalInfo;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * @Copyright:2020 blogs.acproject.xyz Inc. All rights reserved.
  */
 @Data
-public class Gift implements Serializable,Cloneable{
+public class Gift extends BaseEntity implements Serializable,Cloneable{
 
 	/**
 	 * 

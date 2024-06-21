@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import xyz.acproject.danmuji.conf.CenterSetConf;
 import xyz.acproject.danmuji.conf.PublicDataConf;
 import xyz.acproject.danmuji.conf.set.*;
+import xyz.acproject.danmuji.controller.WebController;
 import xyz.acproject.danmuji.entity.user_data.UserCookie;
 import xyz.acproject.danmuji.http.HttpUserData;
 import xyz.acproject.danmuji.service.impl.SetServiceImpl;
@@ -15,6 +16,7 @@ import xyz.acproject.danmuji.tools.BASE64Encoder;
 import xyz.acproject.danmuji.tools.RequestHeaderTools;
 import xyz.acproject.danmuji.tools.file.ProFileTools;
 
+import javax.annotation.Resource;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +34,9 @@ public class DanmujiInitService {
 
     // 借助lombok的RequiredArgsConstructor自动实现构造函数,此处由Spring利用构造函数完成自动装配
     private final SetServiceImpl checkService;
+
+    @Resource
+    private WebController webController;
 
 
     /**
@@ -162,6 +167,10 @@ public class DanmujiInitService {
                 PublicDataConf.COOKIE = null;
             }
             checkService.holdSet(PublicDataConf.centerSetConf);
+        }
+
+        if (PublicDataConf.centerSetConf.getRoomid() != null && PublicDataConf.centerSetConf.getRoomid() > 0) {
+            webController.connectRoom(null,PublicDataConf.centerSetConf.getRoomid());
         }
     }
 }

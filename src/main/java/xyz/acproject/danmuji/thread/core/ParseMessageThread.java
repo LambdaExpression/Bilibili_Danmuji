@@ -19,6 +19,7 @@ import xyz.acproject.danmuji.entity.auto_reply.AutoReply;
 import xyz.acproject.danmuji.entity.base.WsPackage;
 import xyz.acproject.danmuji.entity.danmu_data.*;
 import xyz.acproject.danmuji.entity.high_level_danmu.Hbarrage;
+import xyz.acproject.danmuji.entity.online_rank_count.OnlineRankCount;
 import xyz.acproject.danmuji.entity.room_data.LotteryInfoWeb;
 import xyz.acproject.danmuji.entity.superchat.MedalInfo;
 import xyz.acproject.danmuji.entity.superchat.SuperChat;
@@ -148,7 +149,7 @@ public class ParseMessageThread extends Thread {
                                 e.printStackTrace();
                                 break;
                             }
-                            LOGGER.error("弹幕体解析体:{}", array);
+//                            LOGGER.error("弹幕体解析体:{}", array);
                             //是否开启弹幕
                             boolean is_barrage = getCenterSetConf().is_barrage();
                             // 勋章弹幕
@@ -222,6 +223,8 @@ public class ParseMessageThread extends Thread {
                                     if (getCenterSetConf().is_cmd()) {
                                         System.out.println(stringBuilder.toString());
                                     }
+                                    hbarrage.setRoomId(PublicDataConf.centerSetConf.getRoomid());
+                                    hbarrage.setAnchorName(PublicDataConf.ANCHOR_NAME);
                                     //高级显示处理
                                     try {
                                         danmuWebsocket.sendMessage(WsPackage.toJson("danmu", (short) 0, hbarrage));
@@ -270,6 +273,8 @@ public class ParseMessageThread extends Thread {
                                     jsonObject.getInteger("price"),
                                     gift_type,
                                     jsonObject.getLong("total_coin"), jsonObject.getObject("medal_info", MedalInfo.class));
+                            gift.setRoomId(PublicDataConf.ROOMID);
+                            gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
                             if (getCenterSetConf().is_gift()) {
                                 if (getCenterSetConf().is_gift_free() || (!getCenterSetConf().is_gift_free() && gift_type == 1)) {
                                     stringBuilder.append(JodaTimeUtils.formatDateTime(gift.getTimestamp() * 1000));
@@ -349,6 +354,8 @@ public class ParseMessageThread extends Thread {
                                 gift.setCoin_type((short) 1);
                                 gift.setUname(guard.getUsername());
                                 gift.setUid(guard.getUid());
+                                gift.setRoomId(PublicDataConf.ROOMID);
+                                gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
                                 try {
                                     danmuWebsocket.sendMessage(WsPackage.toJson("gift", (short) 0, gift));
                                 } catch (Exception e) {
@@ -1159,9 +1166,21 @@ public class ParseMessageThread extends Thread {
                             break;
                         case "ONLINE_RANK_COUNT":
                             //					LOGGER.info("在线排名人数更新信息推送:::" + message);
+                            Integer count = JSONObject.parseObject(jsonObject.getString("data")).getInteger("count");
+                            try {
+                                OnlineRankCount rankCount = new OnlineRankCount();
+                                rankCount.setRoomId(PublicDataConf.centerSetConf.getRoomid());
+                                rankCount.setAnchorName(PublicDataConf.ANCHOR_NAME);
+                                rankCount.setCount(count);
+                                rankCount.setTimestamp(System.currentTimeMillis());
+                                danmuWebsocket.sendMessage(WsPackage.toJson("online_rank_count", (short) 0, rankCount));
+                            } catch (Exception e) {
+                                // TODO 自动生成的 catch 块
+                                e.printStackTrace();
+                            }
                             break;
                         case "ONLINE_RANK_V2":
-                            //					LOGGER.info("在线排名v2版本信息推送(即高能榜:::" + message);
+//                            					LOGGER.info("在线排名v2版本信息推送(即高能榜:::" + message);
                             break;
                         case "ONLINE_RANK_TOP3":
                             //					LOGGER.info("在线排名前三信息推送(即高能榜:::" + message);
@@ -1232,6 +1251,8 @@ public class ParseMessageThread extends Thread {
                                 gift.setUname(redPackage.getUname());
                                 gift.setUid(redPackage.getUid());
                                 gift.setMedal_info(redPackage.getMedal_info());
+                                gift.setRoomId(PublicDataConf.ROOMID);
+                                gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
                                 try {
                                     danmuWebsocket.sendMessage(WsPackage.toJson("gift", (short) 0, gift));
                                 } catch (Exception e) {

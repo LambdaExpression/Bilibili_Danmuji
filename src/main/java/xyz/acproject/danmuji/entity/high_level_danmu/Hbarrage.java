@@ -1,9 +1,8 @@
 package xyz.acproject.danmuji.entity.high_level_danmu;
 
 import lombok.Data;
+import xyz.acproject.danmuji.entity.base.BaseEntity;
 import xyz.acproject.danmuji.entity.danmu_data.Barrage;
-
-import java.io.Serializable;
 
 /**
  * @author BanqiJane
@@ -13,7 +12,7 @@ import java.io.Serializable;
  * @Copyright:2020 blogs.acproject.xyz Inc. All rights reserved.
  */
 @Data
-public class Hbarrage implements Serializable, Cloneable {
+public class Hbarrage extends BaseEntity implements Cloneable {
     /**
      *
      */
@@ -45,7 +44,6 @@ public class Hbarrage implements Serializable, Cloneable {
     private Short ulevel;
     // 用户本房间舰队身份(0非舰队，1总督，2提督，3舰长)位置info[7]
     private Short uguard;
-
 
     private Hbarrage() {
         super();
