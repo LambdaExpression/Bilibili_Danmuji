@@ -36,9 +36,9 @@
         </RollingFile>
 
 
-        <RollingFile name="ErrorRollingFileInfo" fileName="log/${displayName}_error.log"
+        <RollingFile name="ErrorRollingFileInfo" fileName="/data/logs/BiliBili_Danmuji/${displayName}_error.log"
 
-                     filePattern="log/${displayName}_error.log.%d{yyyy-MM-dd}">
+                     filePattern="/data/logs/BiliBili_Danmuji/${displayName}_error.log.%d{yyyy-MM-dd}">
 
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
 

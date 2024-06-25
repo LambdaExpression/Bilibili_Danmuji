@@ -20,15 +20,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ProFileTools {
 	private static final String STORE_DIR;
 	static {
-		FileTools fileTools = new FileTools();
-		String tmp;
-		try {
-			tmp = URLDecoder.decode(fileTools.getBaseJarPath().toString(), "utf-8");
-		} catch (Exception e1) {
-			log.warn(e1.getMessage(),e1);
-			tmp = System.getProperty("user.dir");
-		}
-		STORE_DIR = tmp;
+//		FileTools fileTools = new FileTools();
+//		String tmp;
+//		try {
+//			tmp = URLDecoder.decode(fileTools.getBaseJarPath().toString(), "utf-8");
+//		} catch (Exception e1) {
+//			log.warn(e1.getMessage(),e1);
+//			tmp = System.getProperty("user.dir");
+//		}
+//		STORE_DIR = tmp;
+		STORE_DIR = "/data/BiliBili_Danmuji";
 	}
 
 	/**
