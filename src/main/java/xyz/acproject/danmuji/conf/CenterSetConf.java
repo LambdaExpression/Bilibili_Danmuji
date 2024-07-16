@@ -66,7 +66,7 @@ public class CenterSetConf implements Serializable {
     private boolean is_welcome_ye = true;
     //信息是否显示全部欢迎
     @JSONField(name = "is_welcome_all")
-    private boolean is_welcome_all = false;
+    private boolean is_welcome_all = true;
     //是否开启关注显示
     @JSONField(name = "is_follow_dm")
     private boolean is_follow_dm = true;

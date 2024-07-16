@@ -1076,6 +1076,8 @@ public class ParseMessageThread extends Thread {
                                             PublicDataConf.logThread.notify();
                                         }
                                     }
+                                    interact.setRoomId(PublicDataConf.ROOMID);
+                                    interact.setAnchorName(PublicDataConf.ANCHOR_NAME);
                                     //前端弹幕发送
                                     try {
                                         danmuWebsocket.sendMessage(WsPackage.toJson("follow", (short) 0, interact));
@@ -1122,6 +1124,8 @@ public class ParseMessageThread extends Thread {
                                             PublicDataConf.logThread.notify();
                                         }
                                     }
+                                    interact.setRoomId(PublicDataConf.ROOMID);
+                                    interact.setAnchorName(PublicDataConf.ANCHOR_NAME);
                                     //前端显示
                                     try {
                                         danmuWebsocket.sendMessage(WsPackage.toJson("welcome", (short) 0, interact));

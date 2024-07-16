@@ -3,6 +3,7 @@ package xyz.acproject.danmuji.entity.danmu_data;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.acproject.danmuji.entity.base.BaseEntity;
 import xyz.acproject.danmuji.entity.superchat.MedalInfo;
 
 import java.io.Serializable;
@@ -18,7 +19,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Interact implements Serializable{
+public class Interact extends BaseEntity implements Serializable{
 	/**
 	 * 
 	 */
