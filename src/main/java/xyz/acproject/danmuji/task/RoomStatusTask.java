@@ -8,7 +8,10 @@ import xyz.acproject.danmuji.controller.DanmuWebsocket;
 import xyz.acproject.danmuji.entity.base.WsPackage;
 import xyz.acproject.danmuji.entity.room_data.RoomInfo2;
 import xyz.acproject.danmuji.entity.status.Status;
+import xyz.acproject.danmuji.entity.user_data.UserInfo;
+import xyz.acproject.danmuji.entity.user_data.UserInfoInfo;
 import xyz.acproject.danmuji.http.HttpRoomData2;
+import xyz.acproject.danmuji.http.HttpUserData2;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -46,5 +49,20 @@ public class RoomStatusTask {
         danmuWebsocket.sendMessage(WsPackage.toJson("status", (short) 0, status));
     }
 
+    @Scheduled(cron = "0 0 * * * ?")
+    public void syncAUserInfo() throws IOException {
+        if (Objects.isNull(PublicDataConf.AUID) || PublicDataConf.AUID < 0) {
+            return;
+        }
+        UserInfo aUserInfo = HttpUserData2.getAUserInfo();
+        if (Objects.isNull(aUserInfo)) {
+            return;
+        }
+        UserInfoInfo info = aUserInfo.getInfo();
+        if (Objects.isNull(info) || Objects.isNull(info.getUname())) {
+            return;
+        }
+        PublicDataConf.ANCHOR_NAME = info.getUname();
+    }
 
 }

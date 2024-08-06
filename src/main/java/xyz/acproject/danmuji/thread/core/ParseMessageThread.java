@@ -273,8 +273,6 @@ public class ParseMessageThread extends Thread {
                                     jsonObject.getInteger("price"),
                                     gift_type,
                                     jsonObject.getLong("total_coin"), jsonObject.getObject("medal_info", MedalInfo.class));
-                            gift.setRoomId(PublicDataConf.ROOMID);
-                            gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
                             if (getCenterSetConf().is_gift()) {
                                 if (getCenterSetConf().is_gift_free() || (!getCenterSetConf().is_gift_free() && gift_type == 1)) {
                                     stringBuilder.append(JodaTimeUtils.formatDateTime(gift.getTimestamp() * 1000));
@@ -290,6 +288,8 @@ public class ParseMessageThread extends Thread {
                                     if (getCenterSetConf().is_cmd()) {
                                         System.out.println(stringBuilder.toString());
                                     }
+                                    gift.setRoomId(PublicDataConf.ROOMID);
+                                    gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
                                     try {
                                         danmuWebsocket.sendMessage(WsPackage.toJson("gift", (short) 0, gift));
                                     } catch (Exception e) {
@@ -346,6 +346,8 @@ public class ParseMessageThread extends Thread {
                                 }
                                 gift = new Gift();
                                 gift.setGiftName(guard.getGift_name());
+                                gift.setRoomId(PublicDataConf.ROOMID);
+                                gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
                                 gift.setNum(guard.getNum());
                                 gift.setPrice(guard.getPrice());
                                 gift.setTotal_coin((long) guard.getNum() * guard.getPrice());
@@ -1245,6 +1247,8 @@ public class ParseMessageThread extends Thread {
                                     System.out.println(stringBuilder.toString());
                                 }
                                 gift = new Gift();
+                                gift.setRoomId(PublicDataConf.ROOMID);
+                                gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
                                 gift.setGiftName(redPackage.getGift_name());
                                 gift.setNum(redPackage.getNum());
                                 gift.setPrice(redPackage.getPrice());
