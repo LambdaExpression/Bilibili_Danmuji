@@ -72,6 +72,7 @@ public class ParseMessageThread extends Thread {
 //		Fans fans = null;
 //		Rannk rannk = null;
         Guard guard = null;
+        UserToastMsg userToastMsg = null;
         SuperChat superChat = null;
         BlockMessage blockMessage = null;
         WelcomeGuard welcomeGuard = null;
@@ -93,11 +94,12 @@ public class ParseMessageThread extends Thread {
                 if (null != PublicDataConf.resultStrs && !PublicDataConf.resultStrs.isEmpty()
                         && StringUtils.isNotBlank(PublicDataConf.resultStrs.get(0))) {
                     message = PublicDataConf.resultStrs.get(0);
+                    LOGGER.info("解析消息体: "+ message);
                     try {
                         jsonObject = JSONObject.parseObject(message);
                     } catch (Exception e) {
                         // TODO: handle exception
-                        LOGGER.info("抛出解析异常:" + e);
+                        LOGGER.error("抛出解析异常:" , e);
                         //					LOGGER.info(message);
                         synchronized (PublicDataConf.parseMessageThread) {
                             try {
@@ -145,8 +147,7 @@ public class ParseMessageThread extends Thread {
                                         JSONObject.parseObject(((JSONArray) array.get(0)).getString(13)).getString("url"));
                             } catch (Exception e) {
                                 // TODO: handle exception
-                                LOGGER.error("弹幕体解析抛出解析异常体:{}" ,array);
-                                e.printStackTrace();
+                                LOGGER.error("弹幕体解析抛出解析异常体:{}" ,message,e);
                                 break;
                             }
 //                            LOGGER.error("弹幕体解析体:{}", array);
@@ -358,12 +359,12 @@ public class ParseMessageThread extends Thread {
                                 gift.setUid(guard.getUid());
                                 gift.setRoomId(PublicDataConf.ROOMID);
                                 gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
-                                try {
-                                    danmuWebsocket.sendMessage(WsPackage.toJson("gift", (short) 0, gift));
-                                } catch (Exception e) {
-                                    // TODO 自动生成的 catch 块
-                                    e.printStackTrace();
-                                }
+//                                try {
+//                                    danmuWebsocket.sendMessage(WsPackage.toJson("gift", (short) 0, gift));
+//                                } catch (Exception e) {
+//                                    // TODO 自动生成的 catch 块
+//                                    e.printStackTrace();
+//                                }
                                 if (PublicDataConf.logThread != null && !PublicDataConf.logThread.FLAG) {
                                     PublicDataConf.logString.add(stringBuilder.toString());
                                     synchronized (PublicDataConf.logThread) {
@@ -456,14 +457,36 @@ public class ParseMessageThread extends Thread {
 //                            LOGGER.info("有人上舰长啦:::" + message);
                             break;
 
-                        // 上舰消息推送
+                        // 上舰抽奖消息推送
                         case "GUARD_LOTTERY_START":
-                            //					LOGGER.info("上舰消息推送:::" + message);
+                            //					LOGGER.info("上舰抽奖消息推送:::" + message);
                             break;
 
-                        // 上舰抽奖消息推送
+                        // 上舰消息推送
                         case "USER_TOAST_MSG":
-                            //					LOGGER.info("上舰抽奖消息推送:::" + message);
+                            //					LOGGER.info("上舰消息推送:::" + message);
+                            userToastMsg = JSONObject.parseObject(jsonObject.getString("data"), UserToastMsg.class);
+                            gift = new Gift();
+                            gift.setGiftName(userToastMsg.getRole_name());
+                            gift.setRoomId(PublicDataConf.ROOMID);
+                            gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
+                            gift.setNum(userToastMsg.getNum());
+                            gift.setPrice(userToastMsg.getPrice());
+                            gift.setTotal_coin((long) userToastMsg.getNum() * userToastMsg.getPrice());
+                            gift.setTimestamp(System.currentTimeMillis()/ 1000);
+                            gift.setAction("赠送");
+                            gift.setCoin_type((short) 1);
+                            gift.setUname(userToastMsg.getUsername());
+                            gift.setUid(userToastMsg.getUid());
+                            gift.setRoomId(PublicDataConf.ROOMID);
+                            gift.setAnchorName(PublicDataConf.ANCHOR_NAME);
+                            try {
+                                danmuWebsocket.sendMessage(WsPackage.toJson("gift", (short) 0, gift));
+                            } catch (Exception e) {
+                                // TODO 自动生成的 catch 块
+                                e.printStackTrace();
+                            }
+
                             break;
 
                         // 醒目留言

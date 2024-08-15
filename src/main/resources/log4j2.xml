@@ -6,50 +6,47 @@
     <Properties>
         <Property name="pattern">%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %c{1}:%L -%m%n</Property>
         <Property name="displayName">DanMuJiInfo</Property>
+        <property name="filePath" value="/data/logs/BiliBili_Danmuji" />
     </Properties>
 
     <Appenders>
         <Console name="console" target="SYSTEM_OUT" follow="true">
-            <ThresholdFilter level="INFO" onMatch="ACCEPT"
-                             onMismatch="DENY" />
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY" />
             <PatternLayout>
                 <pattern>${pattern}</pattern>
             </PatternLayout>
         </Console>
 
-        <RollingFile name="RollingFileInfo" fileName="log/${displayName}_info.log"
-
-                     filePattern="log/${displayName}.log.%d{yyyy-MM-dd}">
+        <RollingFile name="RollingFileInfo" fileName="${filePath}/${displayName}_info.log" filePattern="${filePath}/${displayName}_info.log.%d{yyyy-MM-dd}_%i">
 
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-
             <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
-
             <PatternLayout pattern="${pattern}"/>
-
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
-
-                <SizeBasedTriggeringPolicy size="1000 MB"/>
+                <SizeBasedTriggeringPolicy size="500MB"/>
             </Policies>
+
+            <!--每天早上5点进行检查删除-->
+            <DefaultRolloverStrategy>
+                <Delete basePath="${filePath}" maxDepth="1">
+                    <IfFileName glob="*.log.*" />
+                    <!--删除10天前的文件-->
+                    <IfLastModified age="10d" />
+                </Delete>
+            </DefaultRolloverStrategy>
 
         </RollingFile>
 
 
-        <RollingFile name="ErrorRollingFileInfo" fileName="/data/logs/BiliBili_Danmuji/${displayName}_error.log"
-
-                     filePattern="/data/logs/BiliBili_Danmuji/${displayName}_error.log.%d{yyyy-MM-dd}">
+        <RollingFile name="ErrorRollingFileInfo" fileName="${filePath}/${displayName}_error.log" filePattern="${filePath}/${displayName}_error.log.%d{yyyy-MM-dd}_%i">
 
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-
             <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
-
             <PatternLayout pattern="${pattern}"/>
-
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1"/>
-
-                <SizeBasedTriggeringPolicy size="1000 MB"/>
+                <SizeBasedTriggeringPolicy size="500MB"/>
             </Policies>
 
         </RollingFile>
